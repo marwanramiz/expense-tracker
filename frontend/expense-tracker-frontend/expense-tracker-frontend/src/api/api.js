@@ -3,10 +3,10 @@ import axios from "axios";
 // Base URL of the Spring Boot backend (marwanramiz/expense-tracker).
 // Override with REACT_APP_API_BASE_URL in a .env file if the backend
 // runs somewhere other than localhost:8080.
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "https://expense-tracker-7xlg.onrender.com";
 
 const api = axios.create({
-  baseURL: "https://expense-tracker-7xlg.onrender.com",
+  baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
