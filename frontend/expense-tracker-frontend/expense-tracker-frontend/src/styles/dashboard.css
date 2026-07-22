@@ -1,0 +1,33 @@
+.ledger-sheet {
+  background-color: #f7f9f7;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 51px,
+    #e3e9e5 52px
+  );
+  border: 1px solid #d6ded9;
+  border-radius: 16px;
+}
+
+.ledger-row {
+  border-bottom: 1px dashed #d6ded9;
+}
+.ledger-row:last-child {
+  border-bottom: none;
+}
+
+.figure {
+  font-family: "IBM Plex Mono", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.category-chip {
+  font-family: "Inter", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  display: inline-block;
+}
