@@ -1,4 +1,4 @@
 [build]
-  base = "frontend"
+  base = "frontend/expense-tracker-frontend"
   command = "npm run build"
-  publish = "frontend/build"
+  publish = "frontend/expense-tracker-frontend/build"
