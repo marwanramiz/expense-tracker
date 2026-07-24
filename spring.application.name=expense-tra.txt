@@ -1,0 +1,5 @@
+spring.application.name=expense-tracker
+spring.data.mongodb.uri=mongodb+srv://marwanramiz:marwanramiz2007@expense-tracker-cluster.pyde5ox.mongodb.net/expense_tracker?retryWrites=true&w=majority
+spring.data.mongodb.database=expense_tracker
+jwt.secret=mysupersecretkeymysupersecretkey1234
+server.port=8080

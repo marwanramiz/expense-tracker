@@ -1,0 +1,57 @@
+name: CI/CD Frontend
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+        working-directory: frontend
+
+      - name: Run tests
+        run: npm test -- --watchAll=false
+        working-directory: frontend
+
+      - name: Build project
+        run: npm run build
+        working-directory: frontend
+
+      - name: Deploy to Netlify
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --dir=frontend/build --prod
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Maven
+        run: mvn clean install
+        working-directory: backend
+
+      - name: Deploy to Render
+        run: curl -X POST "https://api.render.com/deploy/${{ secrets.RENDER_SERVICE_ID }}" \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
