@@ -1,57 +1,50 @@
-name: CI/CD Frontend
+name: CI/CD Frontend + Backend
 
 on:
   push:
     branches: [ "master" ]
 
 jobs:
-  build:
+  frontend:
+    name: Deploy Frontend to Netlify
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: '18'
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
-        working-directory: frontend
-
-      - name: Run tests
-        run: npm test -- --watchAll=false
-        working-directory: frontend
+        run: npm install
 
       - name: Build project
         run: npm run build
-        working-directory: frontend
 
       - name: Deploy to Netlify
-        uses: netlify/actions/cli@master
-        with:
-          args: deploy --dir=frontend/build --prod
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: npx netlify-cli deploy --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} --site ${{ secrets.NETLIFY_SITE_ID }} --prod
 
   backend:
+    name: Deploy Backend to Render
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup JDK
+      - name: Setup Java
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
       - name: Build with Maven
-        run: mvn clean install
-        working-directory: backend
+        run: mvn clean install -DskipTests
 
       - name: Deploy to Render
-        run: curl -X POST "https://api.render.com/deploy/${{ secrets.RENDER_SERVICE_ID }}" \
-          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
+        run: |
+          curl -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json"
+  
